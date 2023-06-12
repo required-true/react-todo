@@ -1,9 +1,5 @@
 function App() {
-  return (
-    <div>
-      React Todo
-    </div>
-  );
+  return <div>React Todo</div>
 }
 
-export default App;
+export default App
