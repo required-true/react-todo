@@ -1,8 +1,9 @@
 import styled from 'styled-components'
-import { Categories, ITodo, todoState } from '../atoms'
-import { useSetRecoilState } from 'recoil'
+import { ITodo, categoriesState, todoState } from '../atoms'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 function Todo({ id, category, text }: ITodo) {
+  const categories = useRecoilValue(categoriesState)
   const setToDos = useSetRecoilState(todoState)
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
@@ -10,7 +11,7 @@ function Todo({ id, category, text }: ITodo) {
     } = event
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id)
-      const newToDo = { text, id, category: name as any }
+      const newToDo = { text, id, category: name }
       return [
         ...oldToDos.slice(0, targetIndex),
         newToDo,
@@ -23,20 +24,17 @@ function Todo({ id, category, text }: ITodo) {
     <Wrapper>
       <span>{text}</span>
       <Btns>
-        {category !== Categories.TO_DO && (
-          <button name={Categories.TO_DO} onClick={onClick}>
-            To Do
-          </button>
-        )}
-        {category !== Categories.DOING && (
-          <button name={Categories.DOING} onClick={onClick}>
-            Doing
-          </button>
-        )}
-        {category !== Categories.DONE && (
-          <button name={Categories.DONE} onClick={onClick}>
-            Done
-          </button>
+        {categories?.map(
+          (cateItem, idx) =>
+            category !== cateItem && (
+              <button
+                name={cateItem}
+                key={`${cateItem}_${idx}`}
+                onClick={onClick}
+              >
+                {cateItem}
+              </button>
+            ),
         )}
       </Btns>
     </Wrapper>

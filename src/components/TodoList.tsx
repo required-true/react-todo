@@ -3,11 +3,13 @@ import styled from 'styled-components'
 import CreateTodo from './CreateTodo'
 import Todo from './Todo'
 import { useRecoilValue } from 'recoil'
-import { todoSelector } from '../atoms'
+import { showAddCategoryForm, todoSelector } from '../atoms'
 import Category from './Category'
+import AddCategoryForm from './AddCategoryForm'
 
 function TodoList() {
   const todos = useRecoilValue(todoSelector)
+  const isCategoryFormShow = useRecoilValue(showAddCategoryForm)
 
   return (
     <Wrapper>
@@ -15,6 +17,12 @@ function TodoList() {
         <Title>To Dos</Title>
         <Category />
       </TitleWrapper>
+      {isCategoryFormShow && (
+        <>
+          <hr />
+          <AddCategoryForm />
+        </>
+      )}
       <hr />
       <CreateTodo />
       {todos?.map((todo) => (
@@ -26,7 +34,7 @@ function TodoList() {
 
 const Wrapper = styled.section`
   min-width: 300px;
-  max-width: 375px;
+  max-width: 768px;
   padding: 30px;
   margin: 100px auto 0;
   border: 1px solid ${(props) => props.theme.innerColor};

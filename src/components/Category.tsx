@@ -1,38 +1,36 @@
 import styled from 'styled-components'
-import { useRecoilState } from 'recoil'
-import { Categories, categoryState } from '../atoms'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { categoriesState, categoryState, showAddCategoryForm } from '../atoms'
 
 function Category() {
+  const categories = useRecoilValue(categoriesState)
+  const setShowAddCategoryForm = useSetRecoilState(showAddCategoryForm)
   const [category, setCategory] = useRecoilState(categoryState)
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { name },
     } = event
-    setCategory(name as any)
+    setCategory(name)
+  }
+
+  const onClickPlus = () => {
+    setShowAddCategoryForm(true)
   }
 
   return (
     <Wrapper>
-      <Btn
-        name={Categories.TO_DO}
-        $isActive={category === Categories.TO_DO}
-        onClick={onClick}
-      >
-        Todo
-      </Btn>
-      <Btn
-        name={Categories.DOING}
-        $isActive={category === Categories.DOING}
-        onClick={onClick}
-      >
-        Doing
-      </Btn>
-      <Btn
-        name={Categories.DONE}
-        $isActive={category === Categories.DONE}
-        onClick={onClick}
-      >
-        Done
+      {categories?.map((cateItem) => (
+        <Btn
+          name={cateItem}
+          $isActive={category === cateItem}
+          key={cateItem}
+          onClick={onClick}
+        >
+          {cateItem}
+        </Btn>
+      ))}
+      <Btn $isActive={true} onClick={onClickPlus}>
+        +
       </Btn>
     </Wrapper>
   )
@@ -51,6 +49,7 @@ const Btn = styled.button<{ $isActive: boolean }>`
   color: ${(props) =>
     props.$isActive ? props.theme.accentColor : props.theme.textColor};
   background: transparent;
+  cursor: pointer;
 `
 
 export default Category
